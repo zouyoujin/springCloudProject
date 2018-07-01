@@ -13,19 +13,37 @@ spring:
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    filters: stat
+    # 连接池的配置信息
+    # 初始化大小，最小，最大
     maxActive: 20
-    initialSize: 1
+    initialSize: 5
+    minIdle: 5
+    # 配置获取连接等待超时的时间
     maxWait: 60000
-    minIdle: 1
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
     timeBetweenEvictionRunsMillis: 60000
     minEvictableIdleTimeMillis: 300000
     validationQuery: select 'x'
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
+    filters: stat
+
+# 配置mybatis-plus
+mybatis-plus:
+  # 配置扫描xml
+  mapper-locations:
+    - classpath:com/kitty/springcloud/oauth/server/mapper*.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: com.kitty.springcloud.oauth.server.entity
+  global-config:
+    # 逻辑删除配置
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
 #--------------分割线----------------#
 eureka: 
   client: 
