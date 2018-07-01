@@ -1,0 +1,38 @@
+server:
+  port: 9999
+  context-path: /
+#--------------分割线----------------#   
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: auth-server
+  datasource:
+    url: jdbc:mysql://192.168.140.188:3306/basedata?useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+#--------------分割线----------------#
+eureka: 
+  client: 
+    serviceUrl: 
+      defaultZone: http://localhost:1001/eureka/
+      #defaultZone=http://eureka1:8081/eureka/,http://eureka2:7081/eureka/,http://eureka3:6081/eureka/
+#--------------分割线----------------#
+logging:
+  level:
+    org.springframework.security: DEBUG
