@@ -1,24 +1,24 @@
 package com.kitty.springcloud.oauth.server.controller;
 
-import java.security.Principal;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>
- * 用户表 前端控制器
- * </p>
+ * 
+ * @ClassName: UsersController
+ * @Description:用户控制层
+ * @author: Kitty
+ * @date: 2018年7月2日 上午1:31:44
  *
- * @author kitty
- * @since 2018-07-02
  */
 @RestController
 @RequestMapping("/users")
 public class UsersController {
+	
 	@GetMapping("/user")
-	public Principal user(Principal user) {
-		return user;
+	public String user() {
+		
+		return "Hello World!";
 	}
 }

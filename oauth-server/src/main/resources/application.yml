@@ -7,7 +7,21 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
     name: auth-server
-  datasource:
+  session:
+    store-type: redis
+  redis:
+    cluster:
+      password:
+      expireseconds: 120
+      nodes: 192.168.140.188:7000,192.168.140.188:7001,192.168.140.188:7002,192.168.140.188:7003,192.168.140.188:7004,192.168.140.188:7005
+      timeout: 2000 #redis操作的超时时间
+      max-redirects: 7
+    pool:
+      maxActive: 5000 #最大连接数
+      maxIdle: 30 #最大空闲连接数
+      minIdle: 5 #最小空闲连接数
+      maxWait: 3000  #获取连接最大等待时间 ms  #default -1
+  datasource: 
     url: jdbc:mysql://192.168.140.188:3306/basedata?useSSL=false
     username: root
     password: 123456
