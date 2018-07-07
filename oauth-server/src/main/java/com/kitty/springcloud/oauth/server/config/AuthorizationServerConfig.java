@@ -1,6 +1,7 @@
 package com.kitty.springcloud.oauth.server.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,12 +15,17 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 
-import com.kitty.springcloud.oauth.server.security.ClientDetailsServiceImpl;
 import com.kitty.springcloud.oauth.server.security.RedisTemplateTokenStore;
 
 /**
- * Created by wangyunfei on 2017/6/9.
+ * 
+ * @ClassName: AuthorizationServerConfig
+ * @Description: 权限服务器
+ * @author: Kitty
+ * @date: 2018年7月7日 下午2:42:50
+ *
  */
 @Configuration
 @EnableAuthorizationServer
@@ -32,10 +38,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	private RedisConnectionFactory connectionFactory;
 
 	@Autowired
+	@Qualifier("userDetailServiceImpl")
 	private UserDetailsService userDetailsService;
 
 	@Autowired
-	private ClientDetailsServiceImpl clientDetails;
+	@Qualifier("clientDetailsServiceImpl")
+	private ClientDetailsService clientDetailsService;
 
 	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
 		RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
@@ -82,14 +90,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		// 配置客户端, 用于client认证
-		//clients.withClientDetails(clientDetails);
-		 //使用存在内存中配置
-		 clients.inMemory() // 使用in-memory存储
-		 .withClient("webapp") // client_id
-		 .secret("webapp") // client_secret
-		 .authorizedGrantTypes("password","refresh_token") // 该client允许的授权类型
-		 .scopes("read", "write")     // 允许的授权范围
-		 .accessTokenValiditySeconds(10000) //token过期时间
-         .refreshTokenValiditySeconds(10000); //refresh过期时间
+		clients.withClientDetails(clientDetailsService);
+		// 使用存在内存中配置
+		// clients.inMemory() // 使用in-memory存储
+		// .withClient("webapp") // client_id
+		// .secret("webapp") // client_secret
+		// .authorizedGrantTypes("authorization_code","password","refresh_token")
+		// // 该client允许的授权类型
+		// .scopes("read", "write") // 允许的授权范围
+		// .accessTokenValiditySeconds(10000) //token过期时间
+		// .refreshTokenValiditySeconds(10000); //refresh过期时间
 	}
 }

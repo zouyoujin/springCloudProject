@@ -1,13 +1,11 @@
 package com.kitty.springcloud.oauth.server.security;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +54,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 		String grantTypes = "authorization_code,password,refresh_token";
 		String authorities = "client";
 		String redirectUris = "http://www.baidu.com";
-		Integer refreshTokenValiditySeconds = 3600;
+		Integer refreshTokenValiditySeconds = 60;
 		Integer accessTokenValiditySeconds = 3600;
 		String clientSecret = "webapp";
 		
