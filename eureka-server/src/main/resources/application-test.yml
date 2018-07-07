@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: cloud-server
+    profiles: test
+server:
+  port: 1001
+
+eureka:
+  instance:
+    hostname: eurekaserver1
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaserver2:1002/eureka/

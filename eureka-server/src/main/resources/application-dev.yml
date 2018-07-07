@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: cloud-server
+    profiles: dev
+server:
+  port: 1001
+
+eureka:
+  instance:
+    hostname: eurekaserver1
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
