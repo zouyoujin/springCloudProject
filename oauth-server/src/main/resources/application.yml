@@ -1,6 +1,6 @@
 server:
   port: 9999
-  context-path: /
+#  context-path: /auth
 #--------------分割线----------------#   
 spring:
   profiles:
@@ -60,10 +60,15 @@ mybatis-plus:
     sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
 #--------------分割线----------------#
 eureka: 
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
   client: 
+    healthcheck: 
+      enabled: true
     serviceUrl: 
-      defaultZone: http://localhost:1001/eureka/
-      #defaultZone=http://eureka1:8081/eureka/,http://eureka2:7081/eureka/,http://eureka3:6081/eureka/
+      defaultZone: http://eurekaserver1:1001/eureka/
+      #defaultZone=http://eurekaserver1:1001/eureka/,http://eurekaserver2:1002/eureka/,http://eurekaserver3:1003/eureka/
 #--------------分割线----------------#
 logging:
   level:
