@@ -17,6 +17,9 @@ import org.springframework.security.oauth2.provider.token.AuthenticationKeyGener
 import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class RedisTemplateTokenStore implements TokenStore {
 
 	private static final String ACCESS = "access:";
@@ -144,6 +147,7 @@ public class RedisTemplateTokenStore implements TokenStore {
 
 	public void removeAccessToken(String tokenValue) {
 		OAuth2AccessToken removed = (OAuth2AccessToken) redisTemplate.opsForValue().get(ACCESS + tokenValue);
+		log.debug("-------------removeAccessToken=" + removed.toString());
 		// Don't remove the refresh token - it's up to the caller to do that
 		OAuth2Authentication authentication = (OAuth2Authentication) this.redisTemplate.opsForValue()
 				.get(AUTH + tokenValue);

@@ -1,4 +1,4 @@
-package com.kitty.springcloud.utils;
+package com.kitty.springcloud.common.utils;
 
 import java.io.IOException;
 import java.io.Writer;

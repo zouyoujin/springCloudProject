@@ -22,7 +22,7 @@ import com.kitty.springcloud.oauth.server.security.RedisTemplateTokenStore;
 /**
  * 
  * @ClassName: AuthorizationServerConfig
- * @Description: 权限服务器
+ * @Description: oauth2.0服务相关配置处理
  * @author: Kitty
  * @date: 2018年7月7日 下午2:42:50
  *
@@ -44,7 +44,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	@Qualifier("clientDetailsServiceImpl")
 	private ClientDetailsService clientDetailsService;
-
+	
+	/**
+	 * redis集群操作类redisTemplate初始化
+	 * @param connectionFactory
+	 * @return
+	 */
 	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
 		RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
 		template.setConnectionFactory(connectionFactory);
@@ -54,7 +59,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		template.afterPropertiesSet();
 		return template;
 	}
-
+	
+	/**
+	 * redis缓存token处理逻辑
+	 * @return
+	 */
 	@Bean
 	public RedisTemplateTokenStore tokenStore() {
 		// return new RedisTokenStore(connectionFactory);
@@ -62,23 +71,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		redisTemplateStore.setRedisTemplate(redisTemplate(connectionFactory));
 		return redisTemplateStore;
 	}
-
+	
+	/**
+	 * 权限验证相关配置处理
+	 */
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-
 		endpoints.authenticationManager(authenticationManager).userDetailsService(userDetailsService)
-				// .tokenStore(new InMemoryTokenStore());
 				.tokenStore(tokenStore());// redis保存token
-
-		// 配置TokenServices参数
-		// DefaultTokenServices tokenServices = new DefaultTokenServices();
-		// tokenServices.setTokenStore(endpoints.getTokenStore());
-		// tokenServices.setSupportRefreshToken(false);
-		// tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
-		// tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
-		// tokenServices.setAccessTokenValiditySeconds((int)
-		// TimeUnit.DAYS.toSeconds(30)); // 30天
-		// endpoints.tokenServices(tokenServices);
 	}
 
 	@Override

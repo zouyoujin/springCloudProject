@@ -1,4 +1,4 @@
-package com.kitty.springcloud.cache.redis;
+package com.kitty.springcloud.common.cache.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

@@ -1,11 +1,11 @@
-package com.kitty.springcloud.cache.redis;
+package com.kitty.springcloud.common.cache.redis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.kitty.springcloud.utils.JsonUtils;
+import com.kitty.springcloud.common.utils.JsonUtils;
 
 import redis.clients.jedis.JedisCluster;
 

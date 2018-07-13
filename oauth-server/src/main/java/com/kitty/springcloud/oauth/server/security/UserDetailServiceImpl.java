@@ -3,14 +3,18 @@ package com.kitty.springcloud.oauth.server.security;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.kitty.springcloud.oauth.server.entity.CustomUserDetails;
+import com.kitty.springcloud.oauth.server.entity.Users;
+import com.kitty.springcloud.oauth.server.service.UsersService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,32 +28,23 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
-	// @Autowired
-	// private SysUserRepository sysUserRepository;
+	@Autowired
+	private UsersService usersService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		log.debug("-----loadUserByUsername--------");
-
-		if ("admin".equalsIgnoreCase(username)) {
-			User user = mockUser();
-			return user;
+		log.debug("UserDetailServiceImpl===>loadUserByUsername()============username=" + username);
+		Users user = null;
+		EntityWrapper<Users> wrapper = new EntityWrapper<Users>();
+		wrapper.eq("user_name", username);
+		user = usersService.selectOne(wrapper);
+		if(user == null){
+			new UsernameNotFoundException("用户" + username + "不存在!");
 		}
-		return null;
-		
-//		String lowcaseUsername = username.toLowerCase();
-//		Optional<SysUser> realUser = Optional.of(new SysUser());
-//		return realUser.map(user -> {
-//			Set<GrantedAuthority> grantedAuthorities = user.getAuthorities();
-//			return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
-//		}).orElseThrow(() -> new UsernameNotFoundException("用户" + lowcaseUsername + "不存在!"));
-	}
-	
-	private User mockUser() {
+		//权限默认admin没有进行细分
 		Collection<GrantedAuthority> authorities = new HashSet<>();
 		authorities.add(new SimpleGrantedAuthority("admin"));
 		
-		User user = new User("admin",new BCryptPasswordEncoder().encode("123456"),authorities);
-		return user;
+		return new CustomUserDetails(user, true, true, true, true, authorities);
 	}
 }

@@ -18,7 +18,6 @@ public class UsersController {
 	
 	@GetMapping("/user")
 	public String user() {
-		
 		return "Hello World!";
 	}
 }

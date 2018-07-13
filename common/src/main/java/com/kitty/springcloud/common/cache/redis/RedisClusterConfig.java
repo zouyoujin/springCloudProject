@@ -1,4 +1,4 @@
-package com.kitty.springcloud.cache.redis;
+package com.kitty.springcloud.common.cache.redis;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

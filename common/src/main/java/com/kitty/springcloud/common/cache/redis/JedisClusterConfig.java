@@ -1,4 +1,4 @@
-package com.kitty.springcloud.cache.redis;
+package com.kitty.springcloud.common.cache.redis;
 
 import java.util.HashSet;
 import java.util.Set;
