@@ -1,5 +1,8 @@
 server:
   port: 9999
+  session:
+      cookie:
+        name: AUTHSESSION
 #  context-path: /auth
 #--------------分割线----------------#   
 spring:
@@ -75,8 +78,3 @@ security:
   oauth2:
     resource:
       filter-order: 3
-  client:
-    client-id: webapp
-    client-secret: webapp
-    access-token-uri: http://localhost:9999/oauth/access_token
-    user-authorizationUri: http://localhost:9999/oauth/authorize

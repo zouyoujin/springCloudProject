@@ -1,6 +1,8 @@
 package com.kitty.springcloud.oauth.server.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -131,6 +133,7 @@ public class Users implements Serializable {
         this.account = account;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

@@ -1,5 +1,9 @@
 package com.kitty.springcloud.oauth.server.security;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -54,8 +58,15 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 		baseClientDetails.setRefreshTokenValiditySeconds(refreshTokenValiditySeconds);
 		baseClientDetails.setAccessTokenValiditySeconds(accessTokenValiditySeconds);
 		baseClientDetails.setClientSecret(clientSecret);
-		baseClientDetails.setClientId(clientId);
-		baseClientDetails.setClientSecret(clientSecret);
+		
+		//如果跳转地址没有配置则不需要审批处理
+		if(StringUtils.isBlank(redirectUris))
+		{
+			List<String> appScopeLists = new ArrayList<String>();
+			appScopeLists.add("true");
+			baseClientDetails.setAutoApproveScopes(appScopeLists);
+		}
+		
 		return baseClientDetails;
 	}
 

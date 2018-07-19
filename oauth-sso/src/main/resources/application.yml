@@ -1,0 +1,33 @@
+server:
+    port: 8082
+    session:
+      cookie:
+        name: AUTHSSOSESSION
+security:
+  basic:
+    enabled: false
+  oauth2:
+    client:
+      clientId: client_id
+      clientSecret: client_secret
+      accessTokenUri: http://localhost:9999/oauth/token
+      userAuthorizationUri: http://localhost:9999/oauth/authorize
+    resource:
+      token-info-uri: http://localhost:9999/oauth/check_token   #token解码的URI
+      userInfoUri: http://localhost:9999/user/info              #指定user info的URI
+spring:
+  profiles:
+    active: dev
+  application:
+    name: auth-sso
+    
+eureka: 
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+  client: 
+    healthcheck: 
+      enabled: true
+    serviceUrl: 
+      defaultZone: http://eurekaserver1:1001/eureka/
+      #defaultZone=http://eurekaserver1:1001/eureka/,http://eurekaserver2:1002/eureka/,http://eurekaserver3:1003/eureka/

@@ -8,7 +8,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class CustomUserDetails extends Users implements UserDetails{
 
@@ -24,8 +23,9 @@ public class CustomUserDetails extends Users implements UserDetails{
 		if (user == null || StringUtils.isBlank(user.getUserName()) || StringUtils.isBlank(user.getPassword())) {
 			throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
 		}
+		setId(user.getId());
         setUserName(user.getUserName());
-		setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+		setPassword(user.getPassword());
         this.enabled = enabled;
         this.accountNonExpired = accountNonExpired;
         this.credentialsNonExpired = credentialsNonExpired;

@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -30,6 +31,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private UsersService usersService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -44,7 +48,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
 		//权限默认admin没有进行细分
 		Collection<GrantedAuthority> authorities = new HashSet<>();
 		authorities.add(new SimpleGrantedAuthority("admin"));
-		
+		//密码进行加密处理
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return new CustomUserDetails(user, true, true, true, true, authorities);
 	}
 }

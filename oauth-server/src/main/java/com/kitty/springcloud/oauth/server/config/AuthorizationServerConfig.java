@@ -1,7 +1,10 @@
 package com.kitty.springcloud.oauth.server.config;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -16,7 +19,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kitty.springcloud.oauth.server.security.RedisTemplateTokenStore;
 
 /**
@@ -27,12 +32,20 @@ import com.kitty.springcloud.oauth.server.security.RedisTemplateTokenStore;
  * @date: 2018年7月7日 下午2:42:50
  *
  */
+@Component
 @Configuration
 @EnableAuthorizationServer
+@AutoConfigureAfter(AuthorizationServerEndpointsConfigurer.class)
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-
+	
+	/**
+	 * 注入authenticationManager 来支持 password grant type
+	 */
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Resource
+	private ObjectMapper objectMapper; // springmvc启动时自动装配json处理类
 
 	@Autowired
 	private RedisConnectionFactory connectionFactory;
