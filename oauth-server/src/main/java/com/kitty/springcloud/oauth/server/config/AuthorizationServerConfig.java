@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -18,10 +15,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kitty.springcloud.oauth.server.security.ClientDetailsServiceImpl;
 import com.kitty.springcloud.oauth.server.security.RedisTemplateTokenStore;
 
 /**
@@ -37,18 +34,15 @@ import com.kitty.springcloud.oauth.server.security.RedisTemplateTokenStore;
 @EnableAuthorizationServer
 @AutoConfigureAfter(AuthorizationServerEndpointsConfigurer.class)
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-	
+
 	/**
 	 * 注入authenticationManager 来支持 password grant type
 	 */
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	@Resource
 	private ObjectMapper objectMapper; // springmvc启动时自动装配json处理类
-
-	@Autowired
-	private RedisConnectionFactory connectionFactory;
 
 	@Autowired
 	@Qualifier("userDetailServiceImpl")
@@ -56,35 +50,24 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Autowired
 	@Qualifier("clientDetailsServiceImpl")
-	private ClientDetailsService clientDetailsService;
-	
-	/**
-	 * redis集群操作类redisTemplate初始化
-	 * @param connectionFactory
-	 * @return
-	 */
-	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-		RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
-		template.setConnectionFactory(connectionFactory);
-		template.setValueSerializer(new JdkSerializationRedisSerializer());
-		// 使用StringRedisSerializer来序列化和反序列化redis的key值
-		template.setKeySerializer(new StringRedisSerializer());
-		template.afterPropertiesSet();
-		return template;
-	}
-	
+	private ClientDetailsServiceImpl clientDetailsService;
+
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
+
 	/**
 	 * redis缓存token处理逻辑
+	 * 
 	 * @return
 	 */
 	@Bean
 	public RedisTemplateTokenStore tokenStore() {
 		// return new RedisTokenStore(connectionFactory);
 		RedisTemplateTokenStore redisTemplateStore = new RedisTemplateTokenStore();
-		redisTemplateStore.setRedisTemplate(redisTemplate(connectionFactory));
+		redisTemplateStore.setRedisTemplate(redisTemplate);
 		return redisTemplateStore;
 	}
-	
+
 	/**
 	 * 权限验证相关配置处理
 	 */
@@ -104,6 +87,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		// 配置客户端, 用于client认证
 		clients.withClientDetails(clientDetailsService);
+		// 加载客户端数据到缓存
+		clientDetailsService.loadAllClientToCache();
 		// 使用存在内存中配置
 		// clients.inMemory() // 使用in-memory存储
 		// .withClient("webapp") // client_id

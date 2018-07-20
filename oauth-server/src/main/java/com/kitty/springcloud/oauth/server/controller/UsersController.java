@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +27,25 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class UsersController {
 	
+	/**
+	 * 主页面
+	 * @return
+	 */
+	@GetMapping("/")
+	public ModelAndView home() {
+		return new ModelAndView("index");
+	}
+	
 	@GetMapping("/hello")
 	public String user() {
 		return "Hello World!";
 	}
-
+	
+	/**
+	 * 获取用户相关信息
+	 * @param user
+	 * @return
+	 */
 	@RequestMapping(value = { "/users" }) // 获取用户信息。/auth/user
 	public Map<String, Object> user(OAuth2Authentication user) {
 		Map<String, Object> userInfo = new HashMap<>();
@@ -54,11 +69,12 @@ public class UsersController {
 	}
 	
 	/**
-	 * 主页面
+	 * 用户信息获取
 	 * @return
 	 */
-	@GetMapping("/")
-	public ModelAndView home() {
-		return new ModelAndView("index");
+	@RequestMapping(value = { "/user" }) // 获取用户信息。/auth/user
+	public Object getCurrentUser() {
+		return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
+	
 }
