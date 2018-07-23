@@ -10,11 +10,11 @@ security:
     client:
       clientId: client_id
       clientSecret: client_secret
-      accessTokenUri: http://localhost:9999/oauth/token
-      userAuthorizationUri: http://localhost:9999/oauth/authorize
+      accessTokenUri: http://authserver:9999/oauth/token
+      userAuthorizationUri: http://authserver:9999/oauth/authorize
     resource:
-      token-info-uri: http://localhost:9999/oauth/check_token   #token解码的URI
-      userInfoUri: http://localhost:9999/user/info              #指定user info的URI
+      token-info-uri: http://authserver:9999/oauth/check_token   #token解码的URI
+      userInfoUri: http://authserver:9999/user/info              #指定user info的URI
 spring:
   profiles:
     active: dev

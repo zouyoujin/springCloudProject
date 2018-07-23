@@ -3,7 +3,7 @@
 	<!--引入默认的一些设置-->
 	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 	<!--web信息-->
-	<logger name="org.springframework.web" level="info"/>
+	<logger name="org.springframework.web" level="debug"/>
 	<logger name="org.springframework.security" level="debug"/>
 	<logger name="com.kitty" level="debug"/>
 	

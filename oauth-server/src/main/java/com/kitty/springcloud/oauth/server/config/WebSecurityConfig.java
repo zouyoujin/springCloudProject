@@ -11,7 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.kitty.springcloud.oauth.server.security.UserDetailServiceImpl;
 
@@ -28,11 +32,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailServiceImpl userDetailService;
 
+	// @Autowired
+	// private OauthLogoutHandler oauthLogoutHandler;
+
+	@Autowired
+	private AuthenticationSuccessHandler authenticationSuccessHandler;
+
+	@Autowired
+	private AuthenticationFailureHandler authenticationFailureHandler;
+
+	@Autowired
+	private LogoutHandler logoutHandler;
+
+	@Autowired
+	private LogoutSuccessHandler logoutSuccessHandler;
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security",
@@ -50,26 +69,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/swagger-ui.html", "/webjars/**")
 				.permitAll().antMatchers("/login").permitAll().antMatchers("/users", "/user/login").permitAll()
 				.anyRequest().authenticated();
-		http.formLogin().loginPage("/login").loginProcessingUrl("/user/login"); //.successHandler(authenticationSuccessHandler)
-				//.failureHandler(authenticationFailureHandler);
+		http.formLogin().loginPage("/login").loginProcessingUrl("/user/login")
+				.successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler);
 
 		// 基于密码 等模式可以无session,不支持授权码模式
-//		if (authenticationEntryPoint != null) {
-//			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
-//			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//
-//		} else {
-//			// 授权码模式单独处理，需要session的支持，此模式可以支持所有oauth2的认证
-//			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-//		}
+		// if (authenticationEntryPoint != null) {
+		// http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+		// http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		//
+		// } else {
+		// // 授权码模式单独处理，需要session的支持，此模式可以支持所有oauth2的认证
+		// http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+		// }
 
-		
-		http.logout()
-        .logoutUrl("/user/logout")
-        .clearAuthentication(true)
-        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
-        //.addLogoutHandler(oauthLogoutHandler);
-		
+		http.logout().logoutUrl("/user/logout").clearAuthentication(true).logoutSuccessHandler(logoutSuccessHandler)
+				.addLogoutHandler(logoutHandler);
+
 		// http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
 		// 解决不允许显示在iframe的问题
 		http.headers().frameOptions().disable();
@@ -78,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());;
+		auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
 	}
 
 }

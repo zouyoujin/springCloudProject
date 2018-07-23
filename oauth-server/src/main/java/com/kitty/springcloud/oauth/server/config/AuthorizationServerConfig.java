@@ -53,28 +53,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	private ClientDetailsServiceImpl clientDetailsService;
 
 	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
-
-	/**
-	 * redis缓存token处理逻辑
-	 * 
-	 * @return
-	 */
-	@Bean
-	public RedisTemplateTokenStore tokenStore() {
-		// return new RedisTokenStore(connectionFactory);
-		RedisTemplateTokenStore redisTemplateStore = new RedisTemplateTokenStore();
-		redisTemplateStore.setRedisTemplate(redisTemplate);
-		return redisTemplateStore;
-	}
-
+	@Qualifier("redisTemplateStore")
+	private RedisTemplateTokenStore redisTemplateStore;
+	
 	/**
 	 * 权限验证相关配置处理
 	 */
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.authenticationManager(authenticationManager).userDetailsService(userDetailsService)
-				.tokenStore(tokenStore());// redis保存token
+				.tokenStore(redisTemplateStore);// redis保存token
 	}
 
 	@Override

@@ -36,6 +36,15 @@ public class UsersController {
 		return new ModelAndView("index");
 	}
 	
+	/**
+	 * authserver权限页面
+	 * @return
+	 */
+	@GetMapping("/securedPage")
+	public ModelAndView securedPage() {
+		return new ModelAndView("securedPage");
+	}
+	
 	@GetMapping("/hello")
 	public String user() {
 		return "Hello World!";
