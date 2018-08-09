@@ -1,8 +1,9 @@
 server:
-    port: 8082
-    session:
-      cookie:
-        name: AUTHSSOSESSION
+  port: 8082
+  session:
+    cookie:
+    name: AUTHSSOSESSION
+  context-path: /ssoclient
 security:
   basic:
     enabled: false
@@ -10,17 +11,29 @@ security:
     client:
       clientId: client_id
       clientSecret: client_secret
-      accessTokenUri: http://localhost:9999/oauth/token
-      userAuthorizationUri: http://localhost:9999/oauth/authorize
+      accessTokenUri: http://authserver:8000/auth/oauth/token
+      userAuthorizationUri: http://authserver:8000/auth/oauth/authorize
     resource:
-      token-info-uri: http://localhost:9999/oauth/check_token   #token解码的URI
-      userInfoUri: http://localhost:9999/user/info              #指定user info的URI
+      token-info-uri: http://authserver:8000/auth/oauth/check_token   #token解码的URI
+      userInfoUri: http://authserver:8000/auth/user/info              #指定user info的URI
 spring:
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
-    name: auth-sso
-    
+    name: sso-client
+  redis:
+    cluster:
+      password:
+      expireseconds: 120
+      nodes: 192.168.140.188:7000,192.168.140.188:7001,192.168.140.188:7002,192.168.140.188:7003,192.168.140.188:7004,192.168.140.188:7005
+      timeout: 2000 #redis操作的超时时间
+      max-redirects: 7
+    pool:
+      maxActive: 5000 #最大连接数
+      maxIdle: 30 #最大空闲连接数
+      minIdle: 5 #最小空闲连接数
+      maxWait: 3000  #获取连接最大等待时间 ms  #default -1
+      
 eureka: 
   instance:
     lease-expiration-duration-in-seconds: 30

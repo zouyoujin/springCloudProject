@@ -17,7 +17,6 @@ import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -71,7 +70,7 @@ public class RedisClusterConfig extends CachingConfigurerSupport {
 	 * @param template
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void setSerializer(StringRedisTemplate template) {
+	private void setSerializer(RedisTemplate<String, Object> template) {
 		Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
 		ObjectMapper om = new ObjectMapper();
 		om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
@@ -126,16 +125,24 @@ public class RedisClusterConfig extends CachingConfigurerSupport {
 	 * @param redirects
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	@Bean(name = "redisTemplate")
-	public RedisTemplate redisTemplate(@Value("${spring.redis.cluster.nodes}") String clusterNodes,
+	public RedisTemplate<String, Object> redisTemplate(@Value("${spring.redis.cluster.nodes}") String clusterNodes,
 			@Value("${spring.redis.cluster.timeout}") Long timeout,
 			@Value("${spring.redis.cluster.max-redirects}") int redirects) {
 
-		StringRedisTemplate template = new StringRedisTemplate();
+		RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
 		template.setConnectionFactory(connectionFactory(getClusterConfiguration(clusterNodes, timeout, redirects)));
 		setSerializer(template);
+		return template;
+	}
+	
+	@Bean(name = "objectRedisTemplate")
+	public RedisTemplate<String, Object> objectRedisTemplate(@Value("${spring.redis.cluster.nodes}") String clusterNodes,
+			@Value("${spring.redis.cluster.timeout}") Long timeout,
+			@Value("${spring.redis.cluster.max-redirects}") int redirects) {
 
+		RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+		template.setConnectionFactory(connectionFactory(getClusterConfiguration(clusterNodes, timeout, redirects)));
 		return template;
 	}
 }

@@ -1,0 +1,38 @@
+server:
+  port: 8000
+#  context-path: /
+spring:
+  application:
+    name: api-gateway
+zuul:
+  retryable: false    #关闭重试
+  sensitive-headers: #/oauth/token需要请求头处理
+  add-host-header: true
+  routes:
+    baidu:  
+      path: /test163/**
+      url: http://www.163.com 
+    auth:  
+      path: /auth/**
+      service-id: auth-server
+      strip-prefix: false   
+      custom-sensitive-headers: true  #http://blog.didispace.com/spring-cloud-zuul-cookie-redirect/ zuul授权码跳转问题
+    sso_client:  
+      path: /ssoclient/**
+      service-id: sso-client
+      strip-prefix: false
+      custom-sensitive-headers: true
+    auth_client: 
+      path: /authclient/**
+      service-id: auth-client
+      strip-prefix: true
+eureka: 
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+  client: 
+    healthcheck: 
+      enabled: true
+    serviceUrl: 
+      defaultZone: http://eurekaserver1:1001/eureka/
+      #defaultZone=http://eurekaserver1:1001/eureka/,http://eurekaserver2:1002/eureka/,http://eurekaserver3:1003/eureka/

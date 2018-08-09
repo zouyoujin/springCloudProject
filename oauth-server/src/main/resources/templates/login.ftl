@@ -4,7 +4,7 @@
 </head>
 <body>
 <div class="container">
-<form role="form" action="/user/login" method="post">
+<form role="form" action="${request.contextPath}/user/login" method="post">
 <div class="form-group">
 <label for="username">Username:</label>
 <input type="text" class="form-control" id="username" name="username"/>

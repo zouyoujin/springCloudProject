@@ -3,7 +3,7 @@ server:
   session:
       cookie:
         name: AUTHSESSION
-#  context-path: /auth
+  context-path: /auth
 #--------------分割线----------------#   
 spring:
   profiles:
@@ -49,6 +49,10 @@ spring:
     maxOpenPreparedStatements: 20
     filters: stat
 
+#freemarker模板配置信息
+  freemarker: 
+      request-context-attribute: request
+      
 # 配置mybatis-plus
 mybatis-plus:
   # 配置扫描xml

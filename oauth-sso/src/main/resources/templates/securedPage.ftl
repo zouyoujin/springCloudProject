@@ -10,8 +10,8 @@
 <body>
 <div class="container">
 	<div class="col-sm-12">
-		<h1>Secured Page</h1>
-		Welcome, <span></span>
+		<h1>Secured Page  <a href="/logout">logout</a></h1>
+		Welcome,ssoClient <a href="http://authserver:9999/securedPage">authserver</a><span></span>
 	</div>
 </div>
 </body>

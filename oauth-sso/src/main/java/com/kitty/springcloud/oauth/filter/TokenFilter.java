@@ -16,6 +16,10 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.kitty.springcloud.common.utils.JsonUtils;
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Token过滤器
  * 
@@ -23,6 +27,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  *
  *         2017年10月14日
  */
+@Slf4j
 public class TokenFilter extends OncePerRequestFilter {
 
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
@@ -30,29 +35,20 @@ public class TokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
-		Authentication user =  SecurityContextHolder.getContext()
-                .getAuthentication();
-		
-		
-		if(user!=null){
-			
-			if(user instanceof OAuth2Authentication){
-				
-				Authentication athentication = (Authentication)user;
-				
-				OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) athentication.getDetails() ;
-				details.getTokenValue() ;
-				 
-				initSession(request) ;
-				 //重新发起sso登录	OAuth2ClientContextFilter redirectUser(redirect, request, response);
-				 
-				 
-			}
-			
-		}
 
-//		OAuth2Authentication
+		Authentication user = SecurityContextHolder.getContext().getAuthentication();
+		if (user != null) {
+			if (user instanceof OAuth2Authentication) {
+				log.info("TokenFilter authentication user = " + JsonUtils.toJson(user));
+				Authentication athentication = (Authentication) user;
+				OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) athentication.getDetails();
+				details.getTokenValue();
+				initSession(request);
+				// 重新发起sso登录 OAuth2ClientContextFilter redirectUser(redirect,
+				// request, response);
+			}
+		}
+		// OAuth2Authentication
 		filterChain.doFilter(request, response);
 	}
 

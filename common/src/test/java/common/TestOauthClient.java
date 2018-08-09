@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kitty.springcloud.common.utils.HttpClientUtils;
