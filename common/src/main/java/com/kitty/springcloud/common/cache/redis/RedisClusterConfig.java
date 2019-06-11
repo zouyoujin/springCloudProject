@@ -86,14 +86,14 @@ public class RedisClusterConfig extends CachingConfigurerSupport {
 	 * @param redisTemplate
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
-	@Bean
-	public CacheManager cacheManager(RedisTemplate redisTemplate) {
-		RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
-		// Number of seconds before expiration. Defaults to unlimited (0)
-		cacheManager.setDefaultExpiration(600); // 设置key-value超时时间，时间单位是秒。
-		return cacheManager;
-	}
+//	@SuppressWarnings("rawtypes")
+//	@Bean
+//	public CacheManager cacheManager(RedisTemplate redisTemplate) {
+//		RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
+//		// Number of seconds before expiration. Defaults to unlimited (0)
+//		cacheManager.setDefaultExpiration(600); // 设置key-value超时时间，时间单位是秒。
+//		return cacheManager;
+//	}
 
 	/**
 	 * 生产key的策略

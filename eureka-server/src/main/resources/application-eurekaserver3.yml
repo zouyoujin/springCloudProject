@@ -1,0 +1,12 @@
+spring:
+    profiles: eurekaserver3
+server:
+  port: 8300
+
+eureka:
+  instance:
+    hostname: eurekaserver3
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaserver1:8100/eureka,http://eurekaserver2:8200/eureka

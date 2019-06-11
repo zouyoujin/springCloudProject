@@ -7,6 +7,7 @@
 		<groupId>springCloudProject</groupId>
 		<artifactId>springCloudProject</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath />
 	</parent>
 	<artifactId>eureka-server</artifactId>
 	<name>eureka-server</name>
@@ -15,169 +16,37 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
+		<!--actuator 依赖(健康检查、审计、统计和监控) -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--Eureka 注册中心服务端依赖 -->
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka-server</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
 		</dependency>
 	</dependencies>
 
-	<profiles>
-		<profile>
-			<!-- 开发环境 -->
-			<id>dev</id>
-			<properties>
-				<environment>dev</environment><!-- 节点名字environment是自己随意取的 -->
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault><!-- 默认激活该profile节点 -->
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<configuration>
-							<source>1.8</source>
-							<target>1.8</target>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-						<configuration>
-			                <fork>true</fork><!--注意要修改这里-->
-			            </configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<!-- 服务地址1配置 -->
-			<id>eurekaserver1</id>
-			<properties>
-				<environment>eurekaserver1</environment>
-			</properties>
-			<build>
-				<finalName>eureka-server1</finalName>	
-				<resources>
-					<resource>
-						<directory>src/main/resources/</directory>
-						<excludes>
-							<exclude>application-dev.yml</exclude>
-							<exclude>application-eurekaserver1.yml</exclude> 
-							<exclude>application-eurekaserver2.yml</exclude>  
-							<exclude>application-prod.yml</exclude>  
-							<exclude>application-test.yml</exclude>  
-						</excludes>
-					</resource>
-				</resources>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<configuration>
-							<source>1.8</source>
-							<target>1.8</target>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-					</plugin>
-					<plugin>
-	                    <groupId>org.apache.maven.plugins</groupId>
-	                    <artifactId>maven-antrun-plugin</artifactId>
-	                    <version>1.8</version>
-	                    <executions>
-	                       <execution>
-	                          <phase>test</phase>
-	                          <goals>
-	                             <goal>run</goal>
-	                          </goals>
-	                          <configuration>
-	                          <tasks>
-	                             <echo>Using application-${environment}.yml</echo>
-	                             <copy file="src/main/resources/application-${environment}.yml" tofile="${project.build.outputDirectory}/application.yml" overwrite="true"/>
-	                          </tasks>
-	                          </configuration>
-	                       </execution>
-	                    </executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<!-- 服务地址2配置 -->
-			<id>eurekaserver2</id>
-			<properties>
-				<environment>eurekaserver2</environment>
-			</properties>
-			<build>
-				<finalName>eureka-server2</finalName>	
-				<resources>
-					<resource>
-						<directory>src/main/resources/</directory>
-						<excludes>
-							<exclude>application-dev.yml</exclude>
-							<exclude>application-eurekaserver1.yml</exclude> 
-							<exclude>application-eurekaserver2.yml</exclude>  
-							<exclude>application-prod.yml</exclude>  
-							<exclude>application-test.yml</exclude>  
-						</excludes>
-					</resource>
-				</resources>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<configuration>
-							<source>1.8</source>
-							<target>1.8</target>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-					</plugin>
-					<plugin>
-	                    <groupId>org.apache.maven.plugins</groupId>
-	                    <artifactId>maven-antrun-plugin</artifactId>
-	                    <version>1.8</version>
-	                    <executions>
-	                       <execution>
-	                          <phase>test</phase>
-	                          <goals>
-	                             <goal>run</goal>
-	                          </goals>
-	                          <configuration>
-	                          <tasks>
-	                             <echo>Using application-${environment}.yml</echo>
-	                             <copy file="src/main/resources/application-${environment}.yml" tofile="${project.build.outputDirectory}/application.yml" overwrite="true"/>
-	                          </tasks>
-	                          </configuration>
-	                       </execution>
-	                    </executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<!-- 测试环境 -->
-			<id>test</id>
-			<properties>
-				<environment>test</environment>
-			</properties>
-		</profile>
-		<profile>
-			<!-- 生产环境 -->
-			<id>prod</id>
-			<properties>
-				<environment>production</environment>
-			</properties>
-		</profile>
-	</profiles>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>

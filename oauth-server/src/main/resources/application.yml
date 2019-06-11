@@ -73,7 +73,7 @@ eureka:
   client: 
     healthcheck: 
       enabled: true
-    serviceUrl: 
+      serviceUrl: 
       defaultZone: http://eurekaserver1:1001/eureka/
       #defaultZone=http://eurekaserver1:1001/eureka/,http://eurekaserver2:1002/eureka/,http://eurekaserver3:1003/eureka/
 #--------------分割线----------------#

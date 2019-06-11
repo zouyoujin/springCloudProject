@@ -1,13 +1,12 @@
 spring:
-  application:
-    name: cloud-server
     profiles: eurekaserver2
 server:
-  port: 1002
+  port: 8200
 
 eureka:
   instance:
     hostname: eurekaserver2
+    instance-id: ${spring.application.name}:${server.port}
   client:
     serviceUrl:
-      defaultZone: http://eurekaserver1:1001/eureka/
+      defaultZone: http://eurekaserver1:8100/eureka,http://eurekaserver3:8300/eureka

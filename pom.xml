@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>springCloudProject</groupId>
 	<artifactId>springCloudProject</artifactId>
@@ -27,15 +28,15 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.13.RELEASE</version>
+		<version>2.0.9.RELEASE</version>
 	</parent>
-	<!-- Spring Cloud 相关版本依赖  -->
+	<!-- Spring Cloud 相关版本依赖 -->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Edgware.SR4</version>
+				<version>Finchley.RELEASE</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -96,6 +97,17 @@
 		<!-- <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-consul-discovery</artifactId> 
 			</dependency> -->
 	</dependencies>
+	<!-- 注意： 这里必须要添加， 否者各种依赖有问题 -->
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/libs-milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -110,9 +122,6 @@
 				<plugin>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
-					<configuration>
-						<fork>true</fork><!--注意要修改这里 -->
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -131,6 +140,6 @@
 		<module>common</module>
 		<module>oauth-sso</module>
 		<module>api-gateway</module>
-  </modules>
+	</modules>
 
 </project>
