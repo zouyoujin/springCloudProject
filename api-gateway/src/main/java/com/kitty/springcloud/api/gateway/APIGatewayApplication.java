@@ -32,18 +32,18 @@ public class APIGatewayApplication {
 	public TokenFilter tokenFilter() {
 		return new TokenFilter();
 	}
-
-//	@Bean
-//	public RouteLocator customerRouteLocator(RouteLocatorBuilder builder) {
-//		// @formatter:off
-//		return builder.routes()
-//				.route(r -> r.path("/baidu/**")
-//						.filters(f -> f.filter(new RequestTimeFilter()).addResponseHeader("X-Response-Default-Foo",
-//								"Default-Bar"))
-//						.uri("http://www.baidu.com").order(0).id("customer_filter_router"))
-//				.build();
-//		// @formatter:on
-//	}
+	
+	@Bean
+	public RouteLocator customerRouteLocator(RouteLocatorBuilder builder) {
+		// @formatter:off
+		return builder.routes()
+				.route(r -> r.path("/**")
+						.filters(f -> f.filter(new RequestTimeFilter()).addResponseHeader("X-Response-Default-Foo",
+								"Default-Bar"))
+						.uri("http://192.168.140.190:9527").order(0).id("customer_filter_router"))
+				.build();
+		// @formatter:on
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(APIGatewayApplication.class, args);

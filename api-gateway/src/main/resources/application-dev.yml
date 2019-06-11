@@ -1,0 +1,40 @@
+server:
+  port: 8000
+  http2:
+    enabled: true
+  context-path: /
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+#        - id: static_route
+#          uri: http://192.168.140.190:9527
+#          order: 10000
+#          predicates:
+#          - Path=/**
+        - id: cloud_eureka_client
+          uri: lb://cloud-eureka-client
+          order: 8000
+          predicates:
+          - Path=/client/**
+          filters:
+          - StripPrefix=1
+eureka: 
+  client: 
+    healthcheck: 
+      enabled: true
+    serviceUrl: 
+      defaultZone: http://eurekaserver1:8100/eureka,http://eurekaserver2:8200/eureka,http://eurekaserver3:8300/eureka
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
