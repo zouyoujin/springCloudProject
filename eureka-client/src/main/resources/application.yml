@@ -1,0 +1,17 @@
+server: 
+  port: 8600
+spring: 
+  application: 
+    name: cloud-eureka-client
+  cloud: 
+    config: 
+      enabled: false
+eureka: 
+  instance:
+    #lease-expiration-duration-in-seconds: 30
+    #lease-renewal-interval-in-seconds: 10
+  client: 
+    healthcheck: 
+      enabled: true
+    serviceUrl: 
+      defaultZone: http://eurekaserver1:8100/eureka,http://eurekaserver2:8200/eureka,http://eurekaserver3:8300/eureka
