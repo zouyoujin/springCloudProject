@@ -1,0 +1,34 @@
+version: '3.3'
+
+services:
+  #第一个docker
+  eurekaserver1:
+    image: 192.168.140.190:5000/springcloud/eurekaserver:1.0
+    ports:
+     - "8100:8100"
+    environment:
+     - "SPRING_PROFILES_ACTIVE=eurekaserver1"
+    restart: always
+    volumes:
+    - /opt/logs:/logs/cloud/
+  #第二个docker
+  eurekaserver2:
+    image: 192.168.140.190:5000/springcloud/eurekaserver:1.0
+    ports:
+     - "8200:8200"
+    environment:
+     - "SPRING_PROFILES_ACTIVE=eurekaserver2"
+    restart: always
+    volumes:
+    - /opt/logs:/logs/cloud/
+    command: /bin/bash -c "nginx -g 'daemon off;'"
+      #第二个docker
+  eurekaserver3:
+    image: 192.168.140.190:5000/springcloud/eurekaserver:1.0
+    ports:
+     - "8300:8300"
+    environment:
+     - "SPRING_PROFILES_ACTIVE=eurekaserver3"
+    restart: always
+    volumes:
+    - /opt/logs:/logs/cloud/
