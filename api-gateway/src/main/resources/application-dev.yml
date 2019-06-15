@@ -10,11 +10,11 @@ spring:
         locator:
           enabled: true
       routes:
-#        - id: static_route
-#          uri: http://192.168.140.190:9527
-#          order: 10000
-#          predicates:
-#          - Path=/**
+        - id: static_route
+          uri: http://192.168.140.190:9527
+          order: 10000
+          predicates:
+          - Path=/**
         - id: cloud_eureka_client
           uri: lb://cloud-eureka-client
           order: 8000
